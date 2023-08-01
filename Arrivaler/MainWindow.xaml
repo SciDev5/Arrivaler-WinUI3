@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="Arrivaler.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Arrivaler"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    mc:Ignorable="d">
+
+    <Window.SystemBackdrop>
+        <MicaBackdrop Kind="BaseAlt"/>
+    </Window.SystemBackdrop>
+
+    <Grid>
+
+        <Grid
+            x:Name="AppTitleBar"
+            VerticalAlignment="Top" Height="28"
+            Background="{ThemeResource LayerOnMicaBaseAltFillColorTransparentBrush}"
+            >
+            <Image Source="Images/WindowIcon.png"
+               HorizontalAlignment="Left" 
+               Width="16" Height="16" 
+               Margin="8,0"/>
+            <TextBlock x:Name="AppTitleTextBlock" Text="Arrivaler"
+                   TextWrapping="NoWrap"
+                   Style="{StaticResource CaptionTextBlockStyle}" 
+                   VerticalAlignment="Center"
+                   Margin="28,0,0,0"/>
+        </Grid>
+
+
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="20">
+
+            <ComboBox Header="Destination" x:Name="destinationComboBox" PlaceholderText="Pick a color" Width="200" />
+
+
+            <TextBlock Text="Hello world:" Style="{StaticResource TitleTextBlockStyle}"/>
+            <TextBox Text="Hello" Width="250"/>
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="Hello world:" Height="20"/>
+                <Button x:Name="btnGetLocation" Click="btnGetLocation_Click">Click Me</Button>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

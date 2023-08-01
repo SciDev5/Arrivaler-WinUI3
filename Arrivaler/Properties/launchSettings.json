@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Arrivaler (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Arrivaler (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
