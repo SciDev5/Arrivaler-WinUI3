@@ -20,7 +20,7 @@ namespace Arrivaler
         }
     }
 
-    internal class PolarPos
+    public class PolarPos
     {
         public readonly double th;
         public readonly double ph;
