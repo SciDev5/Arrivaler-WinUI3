@@ -134,6 +134,16 @@
                     HorizontalAlignment="Stretch"
                     ItemsSource="{x:Bind DestinationInfos}"
                     />
+                <TextBlock
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="Arrival distance threshold (km):"
+                    />
+                <TextBox
+                    x:Name="ArrivalDistanceThreshInput"
+                    Text="2"
+                    PlaceholderText="Arrival distance threshold"
+                    LostFocus="ArrivalDistanceThreshInput_LostFocus"
+                    />
 
 
                 <TextBlock
