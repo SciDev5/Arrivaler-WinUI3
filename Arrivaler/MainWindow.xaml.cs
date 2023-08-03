@@ -5,6 +5,7 @@ using Microsoft.Windows.AppNotifications;
 using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Data.Xml.Dom;
 using Windows.Devices.Geolocation;
@@ -54,13 +55,13 @@ namespace Arrivaler
 
         public MainWindow()
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
-            DestinationInfos = new ObservableCollection<DestinationInfo>
-            { // Default destinations TODO loading
-                new DestinationInfo { Name = "Null Island", Pos = new(0.0, 0.0) },
-                new DestinationInfo { Name = "Penguinlandia", Pos = new(-Math.PI/2, 0.0) },
-            };
+            DestinationInfos = new ObservableCollection<DestinationInfo>();
+            foreach (var destinationInfo in Config.DestinationInfos)
+            {
+                DestinationInfos.Add(destinationInfo);
+            }
 
             ExtendsContentIntoTitleBar = true;
             SetTitleBar(AppTitleBar);
@@ -68,6 +69,8 @@ namespace Arrivaler
             uiThreadDispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
             StartGPSPolling();
+
+            ArrivalDistanceThreshInput.Text = Config.ArrivalThreshold.ToString();
         }
 
         // ~~~~ LOCATION TRACKING ~~~~ //
@@ -149,17 +152,6 @@ namespace Arrivaler
             DestinationSelectComboBox.SelectedValue = Destination;
             HandleDestinationUpdate();
         }
-        private void DestinationDelete_Click(object sender, RoutedEventArgs e)
-        {
-            var it = (e.OriginalSource as MenuFlyoutItem).Tag as DestinationInfo;
-            DestinationInfos.Remove(it);
-            if (Destination == it)
-            {
-                Destination = null;
-                DestinationSelectComboBox.SelectedValue = Destination;
-                HandleDestinationUpdate();
-            }
-        }
         void HandleDestinationUpdate()
         {
             justUpdatedDestination = true;
@@ -167,6 +159,31 @@ namespace Arrivaler
             UpdateLocation();
         }
 
+        // ~~~~ CONFIG ~~~~ //
+
+        private void Config_UpdateDestinations()
+        {
+            Config.DestinationInfos = DestinationInfos.ToArray();
+        }
+        private void Config_UpdateArrivalThreshold()
+        {
+            Config.ArrivalThreshold = arrivalDistanceThreshold;
+        }
+
+        // ~~~~ DESTINATION REMOVING ~~~~ //
+
+        private void DestinationDelete_Click(object sender, RoutedEventArgs e)
+        {
+            var it = (e.OriginalSource as MenuFlyoutItem).Tag as DestinationInfo;
+            DestinationInfos.Remove(it);
+            Config_UpdateDestinations();
+            if (Destination == it)
+            {
+                Destination = null;
+                DestinationSelectComboBox.SelectedValue = Destination;
+                HandleDestinationUpdate();
+            }
+        }
 
         // ~~~~ DESTINATION ADDING ~~~~ //
 
@@ -213,12 +230,12 @@ namespace Arrivaler
             AddDestinationName.Text = "";
             AddDestinationLatitude.Text = "";
             AddDestinationLongitude.Text = "";
-
+            Config_UpdateDestinations();
         }
 
         // ~~~~ ARRIVAL DETECTION ~~~~ //
 
-        private double arrivalDistanceThreshold = 2.0;
+        private double arrivalDistanceThreshold = Config.ArrivalThreshold;
         private bool isArrived = false;
         private bool justUpdatedDestination = false;
         private void ArrivalDistanceThreshInput_LostFocus(object sender, RoutedEventArgs e)
@@ -227,6 +244,7 @@ namespace Arrivaler
             try
             {
                 arrivalDistanceThreshold = double.Parse(ArrivalDistanceThreshInput.Text, CultureInfo.InvariantCulture);
+                Config_UpdateArrivalThreshold();
             }
             catch (FormatException)
             {

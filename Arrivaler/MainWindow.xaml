@@ -140,7 +140,7 @@
                     />
                 <TextBox
                     x:Name="ArrivalDistanceThreshInput"
-                    Text="2"
+                    Text="[FAILED TO LOAD]"
                     PlaceholderText="Arrival distance threshold"
                     LostFocus="ArrivalDistanceThreshInput_LostFocus"
                     />
